@@ -12,3 +12,6 @@
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @fluxAppearance
+
+{{-- Anti-Inspect Script --}}
+<script src="{{ asset('js/anti-inspect.js') }}" defer></script>

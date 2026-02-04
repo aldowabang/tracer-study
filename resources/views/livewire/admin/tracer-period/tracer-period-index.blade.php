@@ -24,7 +24,7 @@
         </div>
 
         {{-- Table --}}
-        <div class="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+        <div class="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
             <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
                 <thead class="bg-zinc-50 dark:bg-zinc-800">
                     <tr>
@@ -51,8 +51,8 @@
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
                                     <flux:button size="sm" variant="ghost" wire:click="toggleActive({{ $period->id }})" :icon="$period->is_active ? 'pause' : 'play'" />
-                                    <flux:button size="sm" variant="ghost" :href="route('admin.tracer-periods.edit', $period->id)" wire:navigate icon="pencil" />
-                                    <flux:button size="sm" variant="ghost" wire:click="delete({{ $period->id }})" wire:confirm="Apakah Anda yakin ingin menghapus periode ini? Semua pertanyaan terkait juga akan dihapus." icon="trash" class="text-red-600 hover:text-red-700" />
+                                    <flux:button size="sm" variant="filled" color="amber" :href="route('admin.tracer-periods.edit', $period->id)" wire:navigate icon="pencil" />
+                                    <flux:button size="sm" variant="filled" color="red" wire:click="delete({{ $period->id }})" wire:confirm="Apakah Anda yakin ingin menghapus periode ini? Semua pertanyaan terkait juga akan dihapus." icon="trash" />
                                 </div>
                             </td>
                         </tr>

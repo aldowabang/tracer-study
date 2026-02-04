@@ -65,7 +65,7 @@
 
         {{-- Options Table --}}
         @if ($selectedQuestion)
-        <div class="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+        <div class="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
             <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
                 <thead class="bg-zinc-50 dark:bg-zinc-800">
                     <tr>
@@ -121,8 +121,8 @@
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-right">
                                 <div class="flex items-center justify-end gap-1">
-                                    <flux:button size="xs" variant="ghost" wire:click="edit({{ $option->id }})" icon="pencil" />
-                                    <flux:button size="xs" variant="ghost" wire:click="delete({{ $option->id }})" wire:confirm="Apakah Anda yakin ingin menghapus opsi '{{ $option->label }}'?" icon="trash" class="text-red-600 hover:text-red-700" />
+                                    <flux:button size="xs" variant="filled" color="amber" wire:click="edit({{ $option->id }})" icon="pencil" />
+                                    <flux:button size="xs" variant="filled" color="red" wire:click="delete({{ $option->id }})" wire:confirm="Apakah Anda yakin ingin menghapus opsi '{{ $option->label }}'?" icon="trash" />
                                 </div>
                             </td>
                         </tr>

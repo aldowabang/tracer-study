@@ -22,20 +22,26 @@ class TracerPeriodList extends Component
 
         if ($this->alumniProfile) {
             // Get all periods matching alumni's graduation year
-            $this->periods = TracerPeriod::where('tahun_lulusan', $this->alumniProfile->tahun_lulus)
+            $periods = TracerPeriod::where('tahun_lulusan', $this->alumniProfile->tahun_lulus)
                 ->orderBy('created_at', 'desc')
+                ->get();
+
+            // Get user participations for these periods
+            $participations = \App\Models\TracerParticipation::where('user_id', $user->id)
+                ->whereIn('tracer_period_id', $periods->pluck('id'))
                 ->get()
-                ->map(function ($period) use ($user) {
-                    // Check if alumni has submitted for this period
-                    $answersCount = TracerAnswer::where('user_id', $user->id)
-                        ->where('tracer_period_id', $period->id)
-                        ->count();
-                    
-                    $period->has_submitted = $answersCount > 0;
-                    $period->questions_count = $period->tracerQuestions()->count();
-                    
-                    return $period;
-                });
+                ->keyBy('tracer_period_id');
+
+            $this->periods = $periods->map(function ($period) use ($participations) {
+                // Check participation status
+                $participation = $participations->get($period->id);
+                
+                $period->participation_status = $participation ? $participation->status : null; // null, 'belum_selesai', 'selesai_isi', 'selesai_cek'
+                $period->has_submitted = $participation && in_array($participation->status, ['selesai_isi', 'selesai_cek']); 
+                $period->questions_count = $period->tracerQuestions()->count();
+                
+                return $period;
+            });
         }
     }
 

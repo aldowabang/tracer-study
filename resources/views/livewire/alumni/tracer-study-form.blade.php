@@ -156,14 +156,29 @@
                     <flux:text class="text-zinc-600 dark:text-zinc-300 mt-2 max-w-md mx-auto">
                         {{ __('Jawaban kuesioner Anda telah tersimpan. Anda dapat mengubah jawaban dengan mengklik tombol di bawah.') }}
                     </flux:text>
-                    <div class="mt-6">
-                        <flux:button variant="primary" wire:click="edit" icon="pencil-square">
-                            {{ __('Edit Jawaban') }}
-                        </flux:button>
+                    <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        @if ($participationStatus !== 'selesai_cek')
+                            <flux:button variant="primary" wire:click="edit" icon="pencil-square" class="w-full sm:w-auto">
+                                {{ __('Edit Jawaban') }}
+                            </flux:button>
+                            <flux:button variant="filled" wire:click="finalizeSubmission" wire:confirm="Apakah Anda yakin ingin menyimpan jawaban secara permanen? Setelah disimpan, Anda tidak dapat mengubah jawaban lagi." icon="check" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white border-none">
+                                {{ __('Simpan Jawaban (Final)') }}
+                            </flux:button>
+                        @else
+                             <flux:button variant="filled" href="{{ route('alumni.tracer-periods') }}" wire:navigate icon="arrow-left" class="w-full sm:w-auto">
+                                {{ __('Kembali ke Daftar') }}
+                            </flux:button>
+                        @endif
                     </div>
                 </div>
             </div>
         @else
+            {{-- Tracer Period Title Header --}}
+            <div class="mb-6 rounded-xl overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6 text-white shadow-sm">
+                <flux:heading size="xl" class="text-white">{{ $period->judul }}</flux:heading>
+                <flux:text class="text-blue-100 mt-1">{{ __('Tahun Lulusan: ') . $period->tahun_lulusan }}</flux:text>
+            </div>
+
             {{-- Alumni Profile Info --}}
             @if ($alumniProfile)
                 <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6">

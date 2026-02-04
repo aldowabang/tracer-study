@@ -46,12 +46,22 @@ Route::middleware(['auth', 'verified', 'role:admin,prodi'])->prefix('admin')->gr
     Route::get('/tracer-options', TracerOptionIndex::class)->name('admin.tracer-options.index');
     Route::get('/tracer-options/create', TracerOptionCreate::class)->name('admin.tracer-options.create');
     Route::get('/tracer-options/{id}/edit', TracerOptionEdit::class)->name('admin.tracer-options.edit');
+
+    // Tracer Statistics
+    Route::get('/tracer-statistics', \App\Livewire\Admin\Tracer\TracerStatistics::class)->name('admin.tracer-statistics');
+});
+
+// Admin Only: User Management Routes
+Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/users', \App\Livewire\Admin\User\UserIndex::class)->name('admin.users.index');
+    Route::get('/users/create', \App\Livewire\Admin\User\UserCreate::class)->name('admin.users.create');
+    Route::get('/users/{id}/edit', \App\Livewire\Admin\User\UserEdit::class)->name('admin.users.edit');
 });
 
 // Alumni Routes
 Route::middleware(['auth', 'verified', 'role:alumni'])->prefix('alumni')->group(function () {
     Route::get('/tracer-periods', TracerPeriodList::class)->name('alumni.tracer-periods');
-    Route::get('/tracer-study', TracerStudyForm::class)->name('alumni.tracer-study');
+    Route::get('/tracer-study/{period_id}', TracerStudyForm::class)->name('alumni.tracer-study');
 });
 
 require __DIR__.'/settings.php';

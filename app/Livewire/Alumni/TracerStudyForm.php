@@ -19,13 +19,14 @@ class TracerStudyForm extends Component
     public bool $hasSubmitted = false;
     public bool $noPeriodAvailable = false;
     public bool $hasStarted = false;
+    public ?string $participationStatus = null;
     
     // Step wizard properties
     public int $currentStep = 0;
     public array $sections = [];
     public array $sectionKeys = [];
 
-    public function mount(): void
+    public function mount($period_id): void
     {
         $user = Auth::user();
         $this->alumniProfile = AlumniProfile::where('user_id', $user->id)->first();
@@ -35,15 +36,21 @@ class TracerStudyForm extends Component
             return;
         }
 
-        // Cari periode tracer study yang sesuai dengan tahun lulus alumni
-        $this->period = TracerPeriod::where('tahun_lulusan', $this->alumniProfile->tahun_lulus)
-            ->where('is_active', true)
+        // Cari periode tracer study berdasarkan ID yang diminta
+        // Dan pastikan tahun lulusan sesuai dengan alumni
+        $this->period = TracerPeriod::where('id', $period_id)
+            ->where('tahun_lulusan', $this->alumniProfile->tahun_lulus)
             ->first();
 
         if (!$this->period) {
             $this->noPeriodAvailable = true;
             return;
         }
+        
+        // Cek status aktif (opsional: admin mungkin ingin preview meski non-aktif, tapi untuk alumni harus aktif)
+        // Kecuali jika alumni sudah mengisi, mungkin masih boleh lihat?
+        // Untuk sekarang kita batasi hanya yang aktif atau sudah submit
+        // if (!$this->period->is_active) { ... } -> Di-handle di view atau logic lain
 
         // Initialize sections
         $this->sections = [
@@ -72,14 +79,18 @@ class TracerStudyForm extends Component
             }
         }
 
-        // Cek apakah alumni sudah pernah mengisi
-        $existingAnswers = TracerAnswer::where('user_id', $user->id)
+        // Cek status partisipasi
+        $participation = \App\Models\TracerParticipation::where('user_id', $user->id)
             ->where('tracer_period_id', $this->period->id)
-            ->count();
+            ->first();
 
-        if ($existingAnswers > 0) {
-            $this->hasSubmitted = true;
-            // Load existing answers
+        if ($participation) {
+            $this->participationStatus = $participation->status;
+            $this->hasStarted = true;
+            if (in_array($participation->status, ['selesai_isi', 'selesai_cek'])) {
+                $this->hasSubmitted = true;
+            }
+            // Load existing answers logic (can remain as checking count or just loading)
             $this->loadExistingAnswers();
         }
     }
@@ -112,14 +123,45 @@ class TracerStudyForm extends Component
     public function startQuestionnaire(): void
     {
         $this->hasStarted = true;
+        
+        // Create or update participation record
+        \App\Models\TracerParticipation::firstOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'tracer_period_id' => $this->period->id
+            ],
+            ['status' => 'belum_selesai']
+        );
     }
 
     public function edit(): void
     {
+        // Check if verified
+        $participation = \App\Models\TracerParticipation::where('user_id', Auth::id())
+            ->where('tracer_period_id', $this->period->id)
+            ->first();
+            
+        if ($participation && $participation->status === 'selesai_cek') {
+            session()->flash('error', 'Jawaban Anda sudah diverifikasi dan tidak dapat diubah.');
+            return;
+        }
+
         $this->hasSubmitted = false;
         $this->hasStarted = true;
         $this->currentStep = 0;
+        
+        // Update status to belum_selesai if editing
+        \App\Models\TracerParticipation::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'tracer_period_id' => $this->period->id
+            ],
+            ['status' => 'belum_selesai']
+        );
+        $this->participationStatus = 'belum_selesai';
     }
+    
+    // ... goToStep, nextStep, previousStep, validateSection ... (no changes needed)
 
     public function goToStep(int $step): void
     {
@@ -201,6 +243,15 @@ class TracerStudyForm extends Component
         }
 
         $user = Auth::user();
+        
+        // Ensure participation record exists (in case saveProgress is called directly)
+        \App\Models\TracerParticipation::firstOrCreate(
+            [
+                'user_id' => $user->id,
+                'tracer_period_id' => $this->period->id
+            ],
+            ['status' => 'belum_selesai']
+        );
         
         // Get current section questions
         $currentSectionName = $this->sectionKeys[$this->currentStep] ?? null;
@@ -297,8 +348,33 @@ class TracerStudyForm extends Component
         // Save all remaining answers
         $this->saveProgress();
         
+        // Update participation status to selesai_isi
+        \App\Models\TracerParticipation::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'tracer_period_id' => $this->period->id
+            ],
+            ['status' => 'selesai_isi']
+        );
+        $this->participationStatus = 'selesai_isi';
+        
         $this->hasSubmitted = true;
         session()->flash('message', 'Jawaban kuesioner berhasil disimpan. Terima kasih atas partisipasi Anda!');
+    }
+
+    public function finalizeSubmission(): void
+    {
+        // Update participation status to selesai_cek (Final/Verified by User)
+        \App\Models\TracerParticipation::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'tracer_period_id' => $this->period->id
+            ],
+            ['status' => 'selesai_cek']
+        );
+        $this->participationStatus = 'selesai_cek';
+        
+        $this->redirect(route('alumni.tracer-periods'), navigate: true);
     }
 
     public function render()

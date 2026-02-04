@@ -59,11 +59,16 @@
                         {{-- Card Header --}}
                         <div class="bg-gradient-to-r {{ $period->is_active ? 'from-blue-600 to-indigo-600' : 'from-zinc-500 to-zinc-600' }} px-6 py-4">
                             <div class="flex items-center justify-between">
-                                <flux:icon name="clipboard-document-list" class="size-8 text-white/80" />
-                                @if ($period->has_submitted)
-                                    <flux:badge color="green" icon="check-circle">{{ __('Sudah Diisi') }}</flux:badge>
-                                @elseif ($period->is_active)
-                                    <flux:badge color="yellow" icon="clock">{{ __('Belum Diisi') }}</flux:badge>
+                                @if ($period->is_active)
+                                    @if ($period->participation_status === 'selesai_cek')
+                                        <flux:badge color="green" icon="check-badge">{{ __('Telah Diverifikasi') }}</flux:badge>
+                                    @elseif ($period->participation_status === 'selesai_isi')
+                                        <flux:badge color="blue" icon="paper-airplane">{{ __('Sudah Dikirim') }}</flux:badge>
+                                    @elseif ($period->participation_status === 'belum_selesai')
+                                        <flux:badge color="orange" icon="pencil">{{ __('Sedang Dikerjakan') }}</flux:badge>
+                                    @else
+                                        <flux:badge color="yellow" icon="clock">{{ __('Belum Diisi') }}</flux:badge>
+                                    @endif
                                 @else
                                     <flux:badge color="zinc">{{ __('Ditutup') }}</flux:badge>
                                 @endif
@@ -97,15 +102,27 @@
 
                             {{-- Action Button --}}
                             @if ($period->is_active)
-                                <flux:button 
-                                    variant="{{ $period->has_submitted ? 'outline' : 'primary' }}" 
-                                    href="{{ route('alumni.tracer-study') }}" 
-                                    wire:navigate 
-                                    class="w-full"
-                                    icon="{{ $period->has_submitted ? 'pencil-square' : 'arrow-right' }}"
-                                >
-                                    {{ $period->has_submitted ? __('Lihat/Edit Jawaban') : __('Isi Kuesioner') }}
-                                </flux:button>
+                                @if ($period->participation_status === 'selesai_cek')
+                                    <flux:button variant="ghost" disabled class="w-full" icon="check-badge">
+                                        {{ __('Selesai') }}
+                                    </flux:button>
+                                @else
+                                    <flux:button 
+                                        variant="{{ $period->participation_status === 'selesai_isi' ? 'outline' : 'primary' }}" 
+                                        href="{{ route('alumni.tracer-study', ['period_id' => $period->id]) }}" 
+                                        wire:navigate 
+                                        class="w-full"
+                                        icon="{{ $period->participation_status === 'selesai_isi' ? 'pencil-square' : ($period->participation_status === 'belum_selesai' ? 'play' : 'arrow-right') }}"
+                                    >
+                                        @if ($period->participation_status === 'selesai_isi')
+                                            {{ __('Lihat/Edit Jawaban') }}
+                                        @elseif ($period->participation_status === 'belum_selesai')
+                                            {{ __('Lanjutkan Pengisian') }}
+                                        @else
+                                            {{ __('Mulai Kuesioner') }}
+                                        @endif
+                                    </flux:button>
+                                @endif
                             @else
                                 <flux:button variant="ghost" disabled class="w-full">
                                     {{ __('Kuesioner Ditutup') }}
