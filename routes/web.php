@@ -65,3 +65,19 @@ Route::middleware(['auth', 'verified', 'role:alumni'])->prefix('alumni')->group(
 });
 
 require __DIR__.'/settings.php';
+
+// Override forgot password logic to generate and send a new random password
+Route::post('/forgot-password-random', function (\Illuminate\Http\Request $request) {
+    $request->validate(['email' => 'required|email']);
+    $user = \App\Models\User::where('email', $request->email)->first();
+    
+    if ($user) {
+        $newPassword = \Illuminate\Support\Str::random(8);
+        $user->password = \Illuminate\Support\Facades\Hash::make($newPassword);
+        $user->save();
+        
+        \Illuminate\Support\Facades\Mail::to($user)->send(new \App\Mail\NewPasswordGenerated($newPassword));
+    }
+
+    return back()->with('status', 'Jika email terdaftar, kami telah mengirimkan password baru Anda ke email tersebut. Silakan cek kotak masuk Anda.');
+})->name('password.random')->middleware('guest');

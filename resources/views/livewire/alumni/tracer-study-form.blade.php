@@ -31,7 +31,7 @@
                     <flux:text class="text-zinc-500 dark:text-zinc-400 max-w-md">
                         {{ __('Saat ini tidak ada kuesioner tracer study yang tersedia untuk tahun lulus Anda, atau profil alumni Anda belum lengkap.') }}
                     </flux:text>
-                    <flux:button variant="primary" href="{{ route('settings.profile') }}" wire:navigate>
+                    <flux:button variant="primary" href="{{ route('profile.edit') }}" wire:navigate>
                         {{ __('Lengkapi Profil') }}
                     </flux:button>
                 </div>
