@@ -30,16 +30,16 @@
 
         <!-- Email Address -->
         <div class="auth-form-group">
-            <label for="email">{{ __('Email address') }}</label>
+            <label for="email">{{ __('NIM atau Email') }}</label>
             <input
                 id="email"
-                type="email"
+                type="text"
                 name="email"
                 value="{{ old('email') }}"
                 required
                 autofocus
                 autocomplete="email"
-                placeholder="email@example.com"
+                placeholder="2012... atau email@example.com"
                 class="auth-input"
             />
         </div>

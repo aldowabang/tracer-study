@@ -38,6 +38,22 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $loginInput = $request->email; // By default the form field is still named 'email'
+            
+            // Allow login by email OR by NIM
+            $user = \App\Models\User::where('email', $loginInput)
+                ->orWhereHas('alumniProfile', function ($query) use ($loginInput) {
+                    $query->where('nim', $loginInput);
+                })->first();
+
+            if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+                return $user;
+            }
+
+            return null;
+        });
     }
 
     /**

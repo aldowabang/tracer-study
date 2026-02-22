@@ -102,7 +102,7 @@ class TracerStatistics extends Component
                     ->count();
                 
                 $answerDistribution[] = [
-                    'label' => $option->opsi,
+                    'label' => $option->label,
                     'count' => $count,
                 ];
                 $totalAnswers += $count;

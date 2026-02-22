@@ -14,8 +14,8 @@
                         @endforeach
                     </flux:select>
                 </div>
-                <div class="mt-4 sm:mt-0">
-                    <flux:button variant="primary" label="{{ __('Export Excel') }}" color="green" icon="arrow-down-tray" wire:click="exportExcel">
+                <div class="mt-6 sm:mt-0">
+                    <flux:button variant="primary" color="green" icon="arrow-down-tray" wire:click="exportExcel">
                             {{ __('Export Excel') }}
                     </flux:button>
                 </div>
