@@ -32,6 +32,21 @@ class TracerStatistics extends Component
         $this->loadStatistics();
     }
 
+    public function exportExcel()
+    {
+        if (!$this->selectedPeriodId) {
+            return;
+        }
+
+        $period = TracerPeriod::find($this->selectedPeriodId);
+        $fileName = 'tracer-answers-' . ($period->tahun_lulusan ?? 'semua') . '.xlsx';
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\TracerAnswersExport($this->selectedPeriodId),
+            $fileName
+        );
+    }
+
     public function loadStatistics(): void
     {
         if (!$this->selectedPeriodId) {

@@ -69,6 +69,11 @@ class TracerStudyForm extends Component
         // Pre-fill tahun lulus dan NIM dari profil alumni
         $questions = $this->period->tracerQuestions()->orderBy('urutan')->get();
         foreach ($questions as $question) {
+            // Ensure checkbox questions are initialized as array so Livewire binds them correctly
+            if ($question->tipe === 'checkbox') {
+                $this->answers[$question->id] = [];
+            }
+
             // Pertanyaan urutan 1 = Tahun lulus
             if ($question->urutan == 1) {
                 $this->answers[$question->id] = (string) $this->alumniProfile->tahun_lulus;

@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class AlumniCreate extends Component
 {
-    public ?int $user_id = null;
+    public string $email = '';
     public string $nim = '';
     public string $nama_lengkap = '';
     public string $prodi = 'S1 Sistem Informasi';
@@ -19,7 +19,7 @@ class AlumniCreate extends Component
     protected function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id|unique:alumni_profiles,user_id',
+            'email' => 'required|email',
             'nim' => 'required|string|max:20|unique:alumni_profiles,nim',
             'nama_lengkap' => 'required|string|max:255',
             'prodi' => 'required|string|max:255',
@@ -33,7 +33,29 @@ class AlumniCreate extends Component
     {
         $validated = $this->validate();
 
-        AlumniProfile::create($validated);
+        $user = User::firstOrCreate(
+            ['email' => $validated['email']],
+            [
+                'name' => $validated['nama_lengkap'],
+                'password' => \Illuminate\Support\Facades\Hash::make($validated['nim']),
+                'role' => 'alumni'
+            ]
+        );
+
+        if (AlumniProfile::where('user_id', $user->id)->exists()) {
+            $this->addError('email', 'Akun user ini sudah tertaut dengan profil alumni lain.');
+            return;
+        }
+
+        AlumniProfile::create([
+            'user_id' => $user->id,
+            'nim' => $validated['nim'],
+            'nama_lengkap' => $validated['nama_lengkap'],
+            'prodi' => $validated['prodi'],
+            'tahun_lulus' => $validated['tahun_lulus'],
+            'no_hp' => $validated['no_hp'],
+            'alamat' => $validated['alamat'],
+        ]);
 
         session()->flash('message', 'Data alumni berhasil ditambahkan.');
 
@@ -42,13 +64,6 @@ class AlumniCreate extends Component
 
     public function render()
     {
-        $users = User::where('role', 'alumni')
-            ->whereDoesntHave('alumniProfile')
-            ->orderBy('name')
-            ->get();
-
-        return view('livewire.admin.alumni.alumni-create', [
-            'users' => $users,
-        ]);
+        return view('livewire.admin.alumni.alumni-create');
     }
 }

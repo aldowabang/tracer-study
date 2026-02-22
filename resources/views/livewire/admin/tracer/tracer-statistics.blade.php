@@ -6,12 +6,19 @@
                 <flux:heading size="xl">{{ __('Statistik Tracer Study') }}</flux:heading>
                 <flux:text class="text-zinc-500 dark:text-zinc-400">{{ __('Analisa jawaban dan partisipasi alumni') }}</flux:text>
             </div>
-            <div class="w-full sm:w-64">
-                <flux:select wire:model.live="selectedPeriodId" :label="__('Pilih Periode')">
-                    @foreach($periods as $period)
-                        <option value="{{ $period->id }}">{{ $period->nama_periode ?? 'Tahun Lulus ' . $period->tahun_lulusan }}</option>
-                    @endforeach
-                </flux:select>
+            <div class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-4">
+                <div class="w-full sm:w-64">
+                    <flux:select wire:model.live="selectedPeriodId" :label="__('Pilih Periode')">
+                        @foreach($periods as $period)
+                            <option value="{{ $period->id }}">{{ $period->nama_periode ?? 'Tahun Lulus ' . $period->tahun_lulusan }}</option>
+                        @endforeach
+                    </flux:select>
+                </div>
+                <div class="mt-4 sm:mt-0">
+                    <flux:button variant="primary" label="{{ __('Export Excel') }}" color="green" icon="arrow-down-tray" wire:click="exportExcel">
+                            {{ __('Export Excel') }}
+                    </flux:button>
+                </div>
             </div>
         </div>
 

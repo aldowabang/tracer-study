@@ -12,26 +12,21 @@
         {{-- Form --}}
         <form wire:submit="save" class="space-y-6">
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6 space-y-4">
-                <flux:select wire:model="user_id" :label="__('User Account')" required>
-                    <option value="">{{ __('Pilih User') }}</option>
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                    @endforeach
-                </flux:select>
+                <flux:input wire:model="email" :label="__('Email Akun (Otomatis Dibuatkan)')" type="email" placeholder="contoh@email.com" required />
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <flux:input wire:model="nim" :label="__('NIM')" type="text" required />
-                    <flux:input wire:model="nama_lengkap" :label="__('Nama Lengkap')" type="text" required />
+                    <flux:input wire:model="nim" :label="__('NIM')" type="text" placeholder="Isi Dengan NIM" required />
+                    <flux:input wire:model="nama_lengkap" :label="__('Nama Lengkap')" type="text" placeholder="Isi Dengan Nama Lengkap" required />
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <flux:input wire:model="prodi" :label="__('Program Studi')" type="text" required />
-                    <flux:input wire:model="tahun_lulus" :label="__('Tahun Lulus')" type="number" min="1900" :max="date('Y') + 1" required />
+                    <flux:input wire:model="prodi" :label="__('Program Studi')" type="text" placeholder="Isi Dengan Program Studi" required />
+                    <flux:input wire:model="tahun_lulus" :label="__('Tahun Lulus')" type="number" min="1900" :max="date('Y') + 1" placeholder="Isi Dengan Tahun Lulus" required />
                 </div>
 
-                <flux:input wire:model="no_hp" :label="__('No. HP')" type="text" />
+                <flux:input wire:model="no_hp" :label="__('No. HP')" type="text" placeholder="Isi Dengan No. HP" />
 
-                <flux:textarea wire:model="alamat" :label="__('Alamat')" rows="3" />
+                <flux:textarea wire:model="alamat" :label="__('Alamat')" rows="3" placeholder="Isi Dengan Alamat" />
             </div>
 
             <div class="flex items-center justify-end gap-4">

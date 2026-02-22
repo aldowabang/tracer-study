@@ -298,7 +298,7 @@
                                 @elseif ($question->tipe === 'radio')
                                     <div class="space-y-2">
                                         @foreach ($question->tracerOptions->sortBy('urutan') as $option)
-                                            <label class="flex items-center gap-3 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors {{ isset($answers[$question->id]) && $answers[$question->id] == $option->id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700' : '' }}">
+                                            <label wire:key="radio-{{ $question->id }}-{{ $option->id }}" class="flex items-center gap-3 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors {{ isset($answers[$question->id]) && $answers[$question->id] == $option->id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700' : '' }}">
                                                 <input 
                                                     type="radio" 
                                                     wire:model.live="answers.{{ $question->id }}"
@@ -315,7 +315,7 @@
                                             @php
                                                 $isChecked = isset($answers[$question->id]) && is_array($answers[$question->id]) && in_array((string) $option->id, $answers[$question->id]);
                                             @endphp
-                                            <label class="flex items-center gap-3 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors {{ $isChecked ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700' : '' }}">
+                                            <label wire:key="checkbox-{{ $question->id }}-{{ $option->id }}" class="flex items-center gap-3 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors {{ $isChecked ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700' : '' }}">
                                                 <input 
                                                     type="checkbox" 
                                                     wire:model.live="answers.{{ $question->id }}"
@@ -329,7 +329,7 @@
                                 @elseif ($question->tipe === 'scale')
                                     <div class="flex flex-wrap gap-2">
                                         @foreach ($question->tracerOptions->sortBy('urutan') as $option)
-                                            <label class="flex-1 min-w-[80px] max-w-[120px] cursor-pointer">
+                                            <label wire:key="scale-{{ $question->id }}-{{ $option->id }}" class="flex-1 min-w-[80px] max-w-[120px] cursor-pointer">
                                                 <input 
                                                     type="radio" 
                                                     wire:model.live="answers.{{ $question->id }}"
