@@ -50,23 +50,6 @@
 
                 {{-- Period Info --}}
                 <div class="p-8">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div class="text-center p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800">
-                            <flux:icon name="calendar" class="size-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                            <flux:text class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">{{ __('Tahun Lulusan') }}</flux:text>
-                            <p class="text-xl font-bold text-zinc-900 dark:text-zinc-100 mt-1">{{ $period->tahun_lulusan }}</p>
-                        </div>
-                        <div class="text-center p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800">
-                            <flux:icon name="document-text" class="size-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                            <flux:text class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">{{ __('Jumlah Bagian') }}</flux:text>
-                            <p class="text-xl font-bold text-zinc-900 dark:text-zinc-100 mt-1">{{ $totalSteps }} {{ __('Bagian') }}</p>
-                        </div>
-                        <div class="text-center p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800">
-                            <flux:icon name="clock" class="size-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                            <flux:text class="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">{{ __('Estimasi Waktu') }}</flux:text>
-                            <p class="text-xl font-bold text-zinc-900 dark:text-zinc-100 mt-1">15-20 {{ __('Menit') }}</p>
-                        </div>
-                    </div>
 
                     {{-- Description --}}
                     <div class="mb-8">
@@ -74,21 +57,6 @@
                         <flux:text class="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                             {{ __('Kuesioner tracer study ini bertujuan untuk melacak perkembangan karier dan pengalaman alumni setelah lulus. Data yang Anda berikan akan membantu program studi dalam meningkatkan kualitas pendidikan dan relevansi kurikulum dengan kebutuhan dunia kerja.') }}
                         </flux:text>
-                    </div>
-
-                    {{-- Sections Preview --}}
-                    <div class="mb-8">
-                        <h3 class="font-semibold text-zinc-900 dark:text-zinc-100 mb-3">{{ __('Bagian Kuesioner') }}</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                            @foreach ($sectionKeys as $sectionName)
-                                <div class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 dark:bg-zinc-800">
-                                    <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-xs font-medium text-blue-700 dark:text-blue-300">
-                                        {{ Str::before($sectionName, '.') }}
-                                    </span>
-                                    <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ Str::after($sectionName, '. ') }}</span>
-                                </div>
-                            @endforeach
-                        </div>
                     </div>
 
                     {{-- Alumni Info --}}
