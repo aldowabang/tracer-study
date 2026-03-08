@@ -180,48 +180,11 @@
                 </div>
             @endif
 
-            {{-- Step Progress Indicator --}}
-            <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <flux:text class="font-medium">{{ __('Progress Pengisian') }}</flux:text>
-                    <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">
-                        {{ __('Bagian :current dari :total', ['current' => $currentStep + 1, 'total' => $totalSteps]) }}
-                    </flux:text>
-                </div>
-                
-                {{-- Progress Bar --}}
-                <div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-2 mb-4">
-                    <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: {{ (($currentStep + 1) / $totalSteps) * 100 }}%"></div>
-                </div>
-                
-                {{-- Step Buttons --}}
-                <div class="flex flex-wrap gap-2">
-                    @foreach ($sectionKeys as $index => $sectionName)
-                        <button 
-                            wire:click="goToStep({{ $index }})"
-                            class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
-                                {{ $index === $currentStep 
-                                    ? 'bg-blue-600 text-white' 
-                                    : ($index < $currentStep 
-                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
-                                        : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700') }}"
-                        >
-                            {{ Str::before($sectionName, '.') }}
-                        </button>
-                    @endforeach
-                </div>
-            </div>
-
             {{-- Current Section Form --}}
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden">
-                {{-- Section Header --}}
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-                    <h2 class="text-lg font-semibold text-white">{{ $currentSectionName }}</h2>
-                </div>
-
                 {{-- Section Questions --}}
                 <div class="p-6 space-y-6">
-                    @foreach ($currentSectionQuestions as $question)
+                    @foreach ($questions as $question)
                         <div class="space-y-3 @if (!$loop->last) pb-6 border-b border-zinc-100 dark:border-zinc-800 @endif">
                             {{-- Question Label --}}
                             <div class="flex items-start gap-3">
@@ -332,24 +295,13 @@
 
             {{-- Navigation Buttons --}}
             <div class="flex items-center justify-between p-6 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
-                <div>
-                    @if ($currentStep > 0)
-                        <flux:button variant="ghost" wire:click="previousStep" icon="arrow-left">
-                            {{ __('Sebelumnya') }}
-                        </flux:button>
-                    @endif
-                </div>
-                
-                <div class="flex items-center gap-3">
-                    @if ($currentStep < $totalSteps - 1)
-                        <flux:button variant="primary" wire:click="nextStep" icon-trailing="arrow-right">
-                            {{ __('Selanjutnya') }}
-                        </flux:button>
-                    @else
-                        <flux:button variant="primary" wire:click="submit" icon="paper-airplane">
-                            {{ __('Kirim Jawaban') }}
-                        </flux:button>
-                    @endif
+                <div class="flex items-center gap-3 w-full justify-end">
+                    <flux:button variant="filled" wire:click="saveProgress" class="bg-zinc-600 hover:bg-zinc-700 text-white border-none">
+                        {{ __('Simpan Sementara') }}
+                    </flux:button>
+                    <flux:button variant="primary" wire:click="submit" icon="paper-airplane">
+                        {{ __('Kirim Jawaban') }}
+                    </flux:button>
                 </div>
             </div>
         @endif
