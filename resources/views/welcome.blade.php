@@ -134,7 +134,7 @@
                     </div>
 
                     <!-- Modern Stats Grid -->
-                    <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-zinc-200 dark:border-zinc-800 pt-10">
+                    {{-- <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-zinc-200 dark:border-zinc-800 pt-10">
                         <div class="p-4">
                             <div class="text-3xl font-bold text-zinc-900 dark:text-white mb-1">2.5k+</div>
                             <div class="text-sm text-zinc-500 dark:text-zinc-400" data-i18n="stat_alumni">Alumni Terdaftar</div>
@@ -151,7 +151,7 @@
                             <div class="text-3xl font-bold text-zinc-900 dark:text-white mb-1">2010</div>
                             <div class="text-sm text-zinc-500 dark:text-zinc-400" data-i18n="stat_since">Sejak Tahun</div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
