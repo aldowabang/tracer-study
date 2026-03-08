@@ -4,6 +4,10 @@ namespace App\Livewire\Admin\Alumni;
 
 use App\Models\AlumniProfile;
 use App\Models\User;
+use App\Mail\AlumniRegistered;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class AlumniCreate extends Component
@@ -33,11 +37,13 @@ class AlumniCreate extends Component
     {
         $validated = $this->validate();
 
+        $password = Str::password(12, true, true, false, false);
+        
         $user = User::firstOrCreate(
             ['email' => $validated['email']],
             [
                 'name' => $validated['nama_lengkap'],
-                'password' => \Illuminate\Support\Facades\Hash::make($validated['nim']),
+                'password' => Hash::make($password),
                 'role' => 'alumni'
             ]
         );
@@ -57,7 +63,12 @@ class AlumniCreate extends Component
             'alamat' => $validated['alamat'],
         ]);
 
-        session()->flash('message', 'Data alumni berhasil ditambahkan.');
+        if ($user->wasRecentlyCreated) {
+            Mail::to($user->email)->send(new AlumniRegistered($user, $password));
+            session()->flash('message', 'Data alumni berhasil ditambahkan. Password dikirim ke email alumni.');
+        } else {
+            session()->flash('message', 'Data alumni berhasil ditambahkan (User sudah ada sebelumnya).');
+        }
 
         $this->redirect(route('admin.alumni.index'), navigate: true);
     }
