@@ -91,35 +91,6 @@
         </div>
 
         <!-- Sidebar / Info -->
-        <div class="lg:col-span-1 space-y-6">
-            <div class="p-6 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg text-white">
-                <h3 class="font-bold text-lg mb-2">Kartu Alumni Digital</h3>
-                <p class="text-blue-100 text-sm mb-6">Gunakan kartu ini untuk akses fasilitas kampus.</p>
-                
-                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 mb-4">
-                    <p class="text-xs text-blue-200 uppercase tracking-wider">Nama</p>
-                    <p class="font-bold text-lg truncate">{{ Auth::user()->name }}</p>
-                    
-                    <div class="mt-3 grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-blue-200 uppercase tracking-wider">NIM</p>
-                            <p class="font-medium">{{ $alumniProfile->nim ?? '-' }}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-blue-200 uppercase tracking-wider">Lulus</p>
-                            <p class="font-medium">{{ $alumniProfile->tahun_lulus ?? '-' }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <flux:button variant="ghost" class="w-full text-white bg-white/20 hover:bg-white/30 border-0 justify-center">Unduh Kartu</flux:button>
-            </div>
 
-            <div class="p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
-                <h3 class="font-bold text-zinc-900 dark:text-white mb-4">Kontak Admin</h3>
-                <p class="text-sm text-zinc-500 mb-4">Butuh bantuan terkait data alumni atau tracer study?</p>
-                <flux:button href="#" variant="outline" class="w-full justify-center" icon="chat-bubble-left">Hubungi Kami</flux:button>
-            </div>
-        </div>
     </div>
 </div>
