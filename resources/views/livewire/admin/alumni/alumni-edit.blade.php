@@ -34,8 +34,8 @@
                 <flux:textarea wire:model="alamat" :label="__('Alamat')" rows="3" />
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                    <flux:input wire:model="password" :label="__('Password Baru (opsional)')" type="password" placeholder="Kosongkan jika tidak ingin mengubah" />
-                    <flux:input wire:model="password_confirmation" :label="__('Konfirmasi Password Baru')" type="password" />
+                    <flux:input wire:model="password" :label="__('Password Baru (opsional)')" type="password" placeholder="Kosongkan jika tidak ingin mengubah" viewable />
+                    <flux:input wire:model="password_confirmation" :label="__('Konfirmasi Password Baru')" type="password" viewable />
                 </div>
             </div>
 
