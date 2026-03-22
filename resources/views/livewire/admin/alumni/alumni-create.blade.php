@@ -12,7 +12,7 @@
         {{-- Form --}}
         <form wire:submit="save" class="space-y-6">
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6 space-y-4">
-                <flux:input wire:model="email" :label="__('Email Akun (Otomatis Dibuatkan)')" type="email" placeholder="contoh@email.com" required />
+                <flux:input wire:model="email" :label="__('Email')" type="email" placeholder="contoh@email.com" required />
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <flux:input wire:model="nim" :label="__('NIM')" type="text" placeholder="Isi Dengan NIM" required />
